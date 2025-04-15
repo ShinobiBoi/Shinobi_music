@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigationgraph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.shinobimusic.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_optionMenuFragment"
+            app:destination="@id/optionMenuFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_playListFragment"
+            app:destination="@id/playListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_artistFragment"
+            app:destination="@id/artistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/optionMenuFragment"
+        android:name="com.example.shinobimusic.ui.fragments.OptionMenuFragment"
+        android:label="fragment_option_menu"
+        tools:layout="@layout/fragment_option_menu" />
+    <fragment
+        android:id="@+id/playListFragment"
+        android:name="com.example.shinobimusic.ui.fragments.PlayListFragment"
+        android:label="fragment_play_list"
+        tools:layout="@layout/fragment_play_list" >
+        <action
+            android:id="@+id/action_playListFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_playListFragment_to_songsFragment"
+            app:destination="@id/songsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.example.shinobimusic.ui.fragments.NewPlaylistFragment"
+        android:label="fragment_new_playlist"
+        tools:layout="@layout/fragment_new_playlist" />
+    <fragment
+        android:id="@+id/artistFragment"
+        android:name="com.example.shinobimusic.ui.fragments.ArtistFragment"
+        android:label="fragment_artist"
+        tools:layout="@layout/fragment_artist" />
+    <fragment
+        android:id="@+id/songsFragment"
+        android:name="com.example.shinobimusic.ui.fragments.SongsFragment"
+        android:label="fragment_songs"
+        tools:layout="@layout/fragment_songs" />
+</navigation>

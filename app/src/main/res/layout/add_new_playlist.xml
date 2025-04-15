@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black">
+
+        <ImageView
+            android:id="@+id/playlist_image_add"
+            android:layout_width="91dp"
+            android:layout_height="88dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/playlist_title_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="31dp"
+            android:text="New Playlist"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/playlist_image_add"
+            app:layout_constraintTop_toTopOf="@id/playlist_image_add" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="17dp"
+            android:src="@drawable/arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/lightgrey"
+            app:layout_constraintStart_toEndOf="@id/playlist_image_add"
+            app:layout_constraintTop_toBottomOf="@id/playlist_image_add" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

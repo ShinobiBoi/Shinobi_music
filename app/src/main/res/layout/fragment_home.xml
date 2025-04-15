@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+<variable
+    name="text"
+    type="String" />
+
+    </data>
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           tools:context=".ui.home.HomeFragment"
+           android:background="@color/black"
+           >
+
+
+               <Button
+                   android:id="@+id/edit_button"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="30dp"
+                   android:layout_marginEnd="15dp"
+                   android:backgroundTint="@color/black"
+                   android:text="Edit"
+                   android:textAlignment="viewStart"
+                   android:textColor="@color/red"
+                   android:textSize="16sp"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <TextView
+                   android:id="@+id/libary_text"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="17dp"
+                   android:layout_marginTop="120dp"
+                   android:text="Libary"
+                   android:textColor="@color/white"
+                   android:textSize="20sp"
+                   android:textStyle="bold"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <View
+                   android:id="@+id/view"
+                   android:layout_width="wrap_content"
+                   android:layout_height="1dp"
+                   android:background="@color/grey"
+                   app:layout_constraintStart_toStartOf="@id/libary_text"
+                   app:layout_constraintTop_toBottomOf="@id/libary_text" />
+
+           <LinearLayout
+               android:id="@+id/option_layout"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:orientation="vertical"
+               android:layout_marginTop="1dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="@id/libary_text"
+               app:layout_constraintTop_toBottomOf="@id/libary_text"
+               >
+               <!-- First Item -->
+               <androidx.constraintlayout.widget.ConstraintLayout
+                   android:id="@+id/playlist_option"
+                   android:layout_width="match_parent"
+                   android:layout_height="52dp"
+                   android:background="@color/black">
+
+                   <ImageView
+                       android:id="@+id/option_icon1"
+                       android:layout_width="20dp"
+                       android:layout_height="20dp"
+                       android:src="@drawable/musicnote"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <TextView
+                       android:id="@+id/option_text1"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp"
+                       android:text="PlayList"
+                       android:textColor="@color/white"
+                       android:textSize="18sp"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toEndOf="@id/option_icon1"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <ImageView
+                       android:id="@+id/option_arrow1"
+                       android:layout_width="16dp"
+                       android:layout_height="16dp"
+                       android:layout_marginEnd="15dp"
+                       android:src="@drawable/arrow"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintEnd_toEndOf="parent"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <View
+                       android:id="@+id/view1"
+                       android:layout_width="match_parent"
+                       android:layout_height="1dp"
+                       android:layout_marginBottom="1dp"
+                       android:background="@color/grey"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent" />
+               </androidx.constraintlayout.widget.ConstraintLayout>
+
+               <!-- Second Item -->
+               <androidx.constraintlayout.widget.ConstraintLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="52dp"
+                   android:id="@+id/artist_option"
+                   android:background="@color/black">
+
+                   <ImageView
+                       android:id="@+id/option_icon2"
+                       android:layout_width="20dp"
+                       android:layout_height="20dp"
+                       android:src="@drawable/micro"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <TextView
+                       android:id="@+id/option_text2"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp"
+                       android:text="Artist"
+                       android:textColor="@color/white"
+                       android:textSize="18sp"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toEndOf="@id/option_icon2"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <ImageView
+                       android:id="@+id/option_arrow2"
+                       android:layout_width="16dp"
+                       android:layout_height="16dp"
+                       android:layout_marginEnd="15dp"
+                       android:src="@drawable/arrow"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintEnd_toEndOf="parent"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <View
+                       android:id="@+id/view2"
+                       android:layout_width="match_parent"
+                       android:layout_height="1dp"
+                       android:layout_marginBottom="1dp"
+                       android:background="@color/grey"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent" />
+               </androidx.constraintlayout.widget.ConstraintLayout>
+
+               <!-- Third Item -->
+               <androidx.constraintlayout.widget.ConstraintLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="52dp"
+                   android:id="@+id/songs_option"
+                   android:background="@color/black">
+
+                   <ImageView
+                       android:id="@+id/option_icon3"
+                       android:layout_width="20dp"
+                       android:layout_height="20dp"
+                       android:src="@drawable/music"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <TextView
+                       android:id="@+id/option_text3"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp"
+                       android:text="Songs"
+                       android:textColor="@color/white"
+                       android:textSize="18sp"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toEndOf="@id/option_icon3"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <ImageView
+                       android:id="@+id/option_arrow3"
+                       android:layout_width="16dp"
+                       android:layout_height="16dp"
+                       android:layout_marginEnd="15dp"
+                       android:src="@drawable/arrow"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintEnd_toEndOf="parent"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <View
+                       android:id="@+id/view3"
+                       android:layout_width="match_parent"
+                       android:layout_height="1dp"
+                       android:background="@color/grey"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent" />
+               </androidx.constraintlayout.widget.ConstraintLayout>
+
+           </LinearLayout>
+
+               <TextView
+                   android:id="@+id/recently_added_text"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="17dp"
+                   android:layout_marginTop="45dp"
+                   android:text="Recently Added"
+                   android:textColor="@color/white"
+                   android:textSize="20sp"
+                   android:textStyle="bold"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@id/option_layout" />
+
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/recent_recyclerView"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   tools:listitem="@layout/recent_item"
+                   tools:itemCount="1"
+                   app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                   android:orientation="horizontal"
+                   android:layout_marginTop="17dp"
+                   android:layout_marginStart="27dp"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@id/recently_added_text" />
+
+
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+</layout>
