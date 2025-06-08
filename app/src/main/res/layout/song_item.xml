@@ -5,14 +5,12 @@
     android:background="@color/black"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-
-
     <ImageView
         android:id="@+id/song_image"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/songimage"
+        android:src="@drawable/songimage"
+        android:scaleType="centerCrop"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"

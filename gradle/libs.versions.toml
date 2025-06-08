@@ -11,11 +11,16 @@ material = "1.12.0"
 activity = "1.9.1"
 constraintlayout = "2.1.4"
 navigationFragmentKtx = "2.7.7"
-
+glide = "4.16.0"
 roomVersion = "2.6.1"
 ksp-version= "1.9.22-1.0.17"
-kotlinxCoroutinesAndroid = "1.7.3"
-lifecycleViewmodelKtx = "2.8.4"
+gson = "2.10.1"
+
+hilt = "2.51"  # Check for the latest version
+hiltCompiler = "1.2.0"  # For Jetpack Compose integration
+
+coroutines = "1.7.3"  # Latest stable version
+lifecycle = "2.7.0"   # For ViewModel and LiveData
 
 
 [libraries]
@@ -35,10 +40,22 @@ room = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion"
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
 
-androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+#hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltCompiler" }
+
+# Coroutines
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# ViewModel & Lifecycle (AndroidX)
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -46,4 +63,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationFragmentKtx" }
 ksp = {id = "com.google.devtools.ksp",version.ref="ksp-version"}
+
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 

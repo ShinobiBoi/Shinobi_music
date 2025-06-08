@@ -1,9 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kapt)
     alias (libs.plugins.safeargs)
     alias(libs.plugins.ksp)
+
+    //dagger hilt
+    alias(libs.plugins.hilt.android)
+    kotlin("kapt")
+
 }
 
 android {
@@ -54,10 +58,25 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
 
-    //coroutines
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
+    // Optional - if you're using Navigation Compose
+    implementation(libs.hilt.navigation.compose)
+
+
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)    // Android dispatchers
+
+    // ViewModel & Lifecycle
+    implementation(libs.lifecycle.viewmodel.ktx)       // ViewModel + Coroutines
+    implementation(libs.lifecycle.runtime.ktx)         // LifecycleScope
+
+    //glide
+    implementation (libs.glide)
+    implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

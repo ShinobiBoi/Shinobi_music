@@ -27,6 +27,12 @@ class HomeFragment : Fragment() {
 
         }
 
+        binding.songsOption.setOnClickListener(){
+            val action = HomeFragmentDirections.actionHomeFragmentToSongsFragment2()
+            findNavController().navigate(action)
+
+        }
+
 
 
 
