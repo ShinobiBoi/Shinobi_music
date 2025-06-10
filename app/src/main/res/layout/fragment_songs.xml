@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".ui.fragments.SongsFragment">
+    tools:context=".ui.songs.SongsFragment">
 
     <Button
         android:id="@+id/back_btn_all_songs"
@@ -75,19 +75,16 @@
         android:id="@+id/shuffle_btn"
         android:layout_width="161dp"
         android:layout_height="41dp"
+        android:layout_marginTop="20dp"
         android:background="@color/grey"
         android:drawableStart="@drawable/shuffle"
         android:paddingStart="53.5dp"
         android:text="  Shuffle"
-        android:textColor="@color/red"
-        android:textAllCaps="false"
         android:textAlignment="textStart"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="20dp"
+        android:textAllCaps="false"
+        android:textColor="@color/red"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/play_btn"
-        app:layout_constraintStart_toStartOf="@id/songs_text"
         app:layout_constraintTop_toBottomOf="@id/songs_text" />
 
 
