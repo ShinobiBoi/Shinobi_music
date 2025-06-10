@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -28,6 +29,8 @@ class SongsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var songAdapter: SongAdapter
 
+    private lateinit var progressBar: ProgressBar
+
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -48,9 +51,11 @@ class SongsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.songs_rv)
+        progressBar = view.findViewById(R.id.progress_bar)
         setupRecyclerView()
         checkPermission()
         observeSongs()
+        observeLoading()
     }
 
     private fun setupRecyclerView() {
@@ -77,7 +82,16 @@ class SongsFragment : Fragment() {
         }
     }
 
-    private fun observeSongs() {
+    private fun observeLoading() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.isLoading.collect { isLoading ->
+                progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            }
+        }
+    }
+
+        private fun observeSongs() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.songs.collect { songs ->
                 songAdapter.submitList(songs)

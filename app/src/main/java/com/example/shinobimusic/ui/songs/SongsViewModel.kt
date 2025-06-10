@@ -18,9 +18,14 @@ class SongsViewModel @Inject constructor(
     private val _songs = MutableStateFlow<List<Song>>(emptyList())
     val songs: StateFlow<List<Song>> = _songs
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
+
     fun loadSongs() {
         viewModelScope.launch {
+            _isLoading.value = true
             _songs.value = repository.getSongs()
+            _isLoading.value = false
         }
     }
 }

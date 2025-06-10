@@ -1,5 +1,6 @@
 package com.example.shinobimusic.data.model
 
+import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shinobimusic.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SongAdapter(
     private val onClick: (Song) -> Unit
@@ -36,10 +41,33 @@ class SongAdapter(
         fun bind(song: Song) {
             title.text = song.title
             artist.text = song.artist
-            Glide.with(itemView).load(song.albumArtBase64).into(albumArt)
+            // Load placeholder first
+            albumArt.setImageResource(R.drawable.songimage)
 
+            // Use a coroutine to avoid blocking the UI thread
+            CoroutineScope(Dispatchers.IO).launch {
+                val retriever = MediaMetadataRetriever()
+                try {
+                    retriever.setDataSource(song.data)
+                    val art = retriever.embeddedPicture
+                    if (art != null) {
+                        withContext(Dispatchers.Main) {
+                            Glide.with(itemView.context)
+                                .asBitmap()
+                                .load(art)
+                                .placeholder(R.drawable.songimage)
+                                .into(albumArt)
+                        }
+                    }
+                } catch (_: Exception) {
+                    // silently fail
+                } finally {
+                    retriever.release()
+                }
+            }
             itemView.setOnClickListener { onClick(song) }
         }
+
     }
 
 }
