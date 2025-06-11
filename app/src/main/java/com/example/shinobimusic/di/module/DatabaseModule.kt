@@ -3,6 +3,7 @@ package com.example.shinobimusic.di.module
 import android.content.Context
 import androidx.room.Room
 import com.example.shinobimusic.data.local.AppDatabase
+import com.example.shinobimusic.data.local.PlayListDao
 import com.example.shinobimusic.data.local.SongDao
 import dagger.Module
 import dagger.Provides
@@ -27,4 +28,7 @@ object DatabaseModule {
 
     @Provides
     fun provideSongDao(database: AppDatabase): SongDao = database.songDao()
+
+    @Provides
+    fun providePlayListDao(database: AppDatabase): PlayListDao = database.playlistDao()
 }

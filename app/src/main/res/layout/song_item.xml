@@ -8,25 +8,30 @@
     <ImageView
         android:id="@+id/song_image"
         android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_height="0dp"
         android:src="@drawable/songimage"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginVertical="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 
     <TextView
         android:id="@+id/song_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
+        android:layout_marginEnd="2dp"
         android:layout_marginTop="3dp"
         android:text="Song Name"
         android:textSize="14sp"
         android:textColor="@color/white"
         app:layout_constraintStart_toEndOf="@id/song_image"
+        app:layout_constraintEnd_toStartOf="@id/song_options_btn"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintTop_toTopOf="@id/song_image" />
 
     <TextView
@@ -45,9 +50,22 @@
         android:layout_height="1dp"
         android:background="@color/lightgrey"
         android:layout_marginStart="14dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="18dp"
         app:layout_constraintStart_toEndOf="@id/song_image"
-        app:layout_constraintTop_toBottomOf="@id/song_image" />
+        app:layout_constraintTop_toBottomOf="@id/artist_name_song_item" />
+
+    <ImageButton
+        android:id="@+id/song_options_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/threedots"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="12dp"
+        android:layout_marginEnd="8dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

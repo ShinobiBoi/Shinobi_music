@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/custom_popup_menu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/menu_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        android:textColor="@color/white"
+        android:background="@drawable/popup_background"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/whiteplay"
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        android:drawablePadding="8dp" />
+
+    <TextView
+        android:id="@+id/menu_add_to_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to Playlist...."
+        android:textColor="@color/white"
+        android:background="@drawable/popup_background"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/whiteplaylist"
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        android:drawablePadding="8dp" />
+
+    <TextView
+        android:id="@+id/menu_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share"
+        android:textColor="@color/white"
+        android:background="@drawable/popup_background"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/whiteshare"
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        android:drawablePadding="8dp" />
+    <TextView
+        android:id="@+id/menu_love"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Love"
+        android:textColor="@color/white"
+        android:background="@drawable/popup_background"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/whitelove"
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        android:drawablePadding="8dp" />
+
+    <TextView
+        android:id="@+id/menu_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/popup_background"
+        android:text="Delete"
+        android:textColor="@color/red"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/remove"
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        android:drawablePadding="8dp" />
+</LinearLayout>

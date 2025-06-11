@@ -22,7 +22,7 @@ class HomeFragment : Fragment() {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         binding.playlistOption.setOnClickListener(){
-            val action = HomeFragmentDirections.actionHomeFragmentToPlayListFragment()
+            val action = HomeFragmentDirections.actionHomeFragmentToAllPlaylistsFragment()
             findNavController().navigate(action)
 
         }

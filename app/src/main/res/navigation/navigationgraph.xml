@@ -14,32 +14,20 @@
             android:id="@+id/action_homeFragment_to_optionMenuFragment"
             app:destination="@id/optionMenuFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_playListFragment"
-            app:destination="@id/playListFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_artistFragment"
             app:destination="@id/artistFragment" />
         <action
             android:id="@+id/action_homeFragment_to_songsFragment2"
             app:destination="@id/songsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_allPlaylistsFragment"
+            app:destination="@id/allPlaylistsFragment" />
     </fragment>
     <fragment
         android:id="@+id/optionMenuFragment"
         android:name="com.example.shinobimusic.ui.fragments.OptionMenuFragment"
         android:label="fragment_option_menu"
         tools:layout="@layout/fragment_option_menu" />
-    <fragment
-        android:id="@+id/playListFragment"
-        android:name="com.example.shinobimusic.ui.fragments.PlayListFragment"
-        android:label="fragment_play_list"
-        tools:layout="@layout/fragment_play_list" >
-        <action
-            android:id="@+id/action_playListFragment_to_newPlaylistFragment"
-            app:destination="@id/newPlaylistFragment" />
-        <action
-            android:id="@+id/action_playListFragment_to_songsFragment"
-            app:destination="@id/songsFragment" />
-    </fragment>
     <fragment
         android:id="@+id/newPlaylistFragment"
         android:name="com.example.shinobimusic.ui.fragments.NewPlaylistFragment"
@@ -55,4 +43,16 @@
         android:name="com.example.shinobimusic.ui.songs.SongsFragment"
         android:label="fragment_songs"
         tools:layout="@layout/fragment_songs" />
+    <fragment
+        android:id="@+id/allPlaylistsFragment"
+        android:name="com.example.shinobimusic.ui.fragments.AllPlaylistsFragment"
+        android:label="fragment_all_playlists"
+        tools:layout="@layout/fragment_all_playlists" >
+        <action
+            android:id="@+id/action_allPlaylistsFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_allPlaylistsFragment_to_songsFragment"
+            app:destination="@id/songsFragment" />
+    </fragment>
 </navigation>

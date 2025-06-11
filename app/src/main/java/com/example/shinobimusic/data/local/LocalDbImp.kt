@@ -3,6 +3,8 @@ package com.example.shinobimusic.data.local
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.provider.MediaStore
+import androidx.lifecycle.LiveData
+import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
 import com.example.shinobimusic.domain.local.LocalDb
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -12,7 +14,8 @@ import javax.inject.Inject
 
 class LocalDbImp@Inject constructor
     (@ApplicationContext private val context: Context,
-     private val songDao: SongDao
+     private val songDao: SongDao,
+     private val playListDao: PlayListDao
 ) :LocalDb {
 
     override suspend fun getSongs(): List<Song> = withContext(Dispatchers.IO) {
@@ -70,4 +73,48 @@ class LocalDbImp@Inject constructor
         retriever.release()
         return songs
     }
+
+
+
+    override suspend fun createPlaylist(name: String) {
+        val playlist = Playlist(name = name, songPaths = listOf())
+        playListDao.insertPlaylist(playlist)
+    }
+
+    override  fun getAllPlaylists(): LiveData<List<Playlist>> {
+        return playListDao.getAllPlaylists()
+    }
+
+    override suspend fun addSongToPlaylist(playlistId: Int, songPath: String) {
+        val playlist = playListDao.getPlaylistById(playlistId)
+        if (!playlist.songPaths.contains(songPath)) {
+            val updatedSongs = playlist.songPaths + songPath
+            val updatedPlaylist = playlist.copy(songPaths = updatedSongs)
+            playListDao.updatePlaylist(updatedPlaylist)
+        }
+    }
+
+    override suspend fun removeSongFromPlaylist(playlistId: Int, songPath: String)  {
+        val playlist = playListDao.getPlaylistById(playlistId)
+        val updatedSongs = playlist.songPaths - songPath
+        val updatedPlaylist = playlist.copy(songPaths = updatedSongs)
+        playListDao.updatePlaylist(updatedPlaylist)
+    }
+
+    override suspend fun isSongInPlaylist(playlistId: Int, songPath: String): Boolean {
+        val playlist = playListDao.getPlaylistById(playlistId)
+        return playlist.songPaths.contains(songPath)
+    }
+
+    override suspend fun deletePlaylist(playlistId: Int)  {
+        val playlist = playListDao.getPlaylistById(playlistId)
+        playListDao.deletePlaylist(playlist)
+    }
+
+
+
+
+
+
+
 }
