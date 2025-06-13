@@ -7,6 +7,7 @@ import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
 import com.example.shinobimusic.domain.repo.SongRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -29,6 +30,13 @@ class SongsViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             _songs.value = repository.getSongs()
+            _isLoading.value = false
+        }
+    }
+    fun loadSongsByPaths(songPaths: List<String>){
+        viewModelScope.launch {
+            _isLoading.value = true
+            _songs.value = repository.getSongsByPaths(songPaths)
             _isLoading.value = false
         }
     }

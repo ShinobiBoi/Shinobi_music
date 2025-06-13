@@ -226,7 +226,7 @@
                    android:layout_width="0dp"
                    android:layout_height="wrap_content"
                    tools:listitem="@layout/recent_item"
-                   tools:itemCount="1"
+                   tools:itemCount="4"
                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                    android:orientation="horizontal"
                    android:layout_marginTop="17dp"

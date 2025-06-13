@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shinobimusic.R
@@ -29,17 +30,17 @@ import kotlinx.coroutines.launch
 class SongsFragment : Fragment() {
 
     private val viewModel: SongsViewModel by viewModels()
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var songAdapter: SongAdapter
 
+    private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
 
+    private lateinit var songAdapter: SongAdapter
     private var currentPlaylists: List<Playlist> = emptyList()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                viewModel.loadSongs()
+                    viewModel.loadSongs()
             } else {
                 Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
             }
@@ -88,7 +89,7 @@ class SongsFragment : Fragment() {
 
         when {
             ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
-                viewModel.loadSongs()
+                    viewModel.loadSongs()
             }
             else -> {
                 requestPermissionLauncher.launch(permission)
@@ -115,10 +116,8 @@ class SongsFragment : Fragment() {
 
     private fun showAddToPlaylistDialog(song: Song) {
         if (currentPlaylists.isEmpty()) {
-            Toast.makeText(requireContext(), "No playlists found", Toast.LENGTH_SHORT).show()
             return
         }
-
         val playlistNames = currentPlaylists.map { it.name }.toTypedArray()
         val checkedItems = BooleanArray(currentPlaylists.size) { index ->
             // ✅ Pre-check if song path already exists in this playlist

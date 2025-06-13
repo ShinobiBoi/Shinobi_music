@@ -5,13 +5,14 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.Serializable
 
 @Entity(tableName = "playlists")
 data class Playlist(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val songPaths: List<String>
-)
+):Serializable
 
 class Converters {
     private val gson = Gson()

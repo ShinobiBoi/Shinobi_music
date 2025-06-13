@@ -23,6 +23,10 @@ class SongRepositoryImp @Inject constructor(
         return localDb.getSongs()
     }
 
+    override suspend fun getSongsByPaths(songPaths: List<String>): List<Song> {
+        return localDb.getSongsByPaths(songPaths)
+    }
+
     override suspend fun createPlaylist(name: String) {
         localDb.createPlaylist(name)
     }

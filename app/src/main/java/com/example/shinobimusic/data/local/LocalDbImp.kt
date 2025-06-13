@@ -18,10 +18,10 @@ class LocalDbImp@Inject constructor
      private val playListDao: PlayListDao
 ) :LocalDb {
 
-    override suspend fun getSongs(): List<Song> = withContext(Dispatchers.IO) {
+    override suspend fun getSongs(): List<Song> {
         val cachedSongs = songDao.getAllSongs()
         if (cachedSongs.isNotEmpty()) {
-            return@withContext cachedSongs
+            return cachedSongs
         }
 
         // Scan if cache is empty
@@ -30,7 +30,22 @@ class LocalDbImp@Inject constructor
             songDao.insertAll(songs)
         }
 
-        return@withContext songs
+        return songs
+    }
+
+    override suspend fun getSongsByPaths(songPaths: List<String>): List<Song> {
+        val cachedSongs = songDao.getAllSongs()
+        if (cachedSongs.isNotEmpty()) {
+            return cachedSongs.filter { it.data in songPaths }
+        }
+
+        // Scan if cache is empty
+        val songs = scanSongsFromStorage()
+        if (songs.isNotEmpty()) {
+            songDao.insertAll(songs)
+        }
+
+        return songs.filter { it.data in songPaths }
     }
 
     private fun scanSongsFromStorage(): List<Song> {
