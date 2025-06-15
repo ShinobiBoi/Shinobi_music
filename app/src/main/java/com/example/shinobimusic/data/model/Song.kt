@@ -9,5 +9,4 @@ data class Song(
     val artist: String,
     @PrimaryKey
     val data: String,
-    //val albumArtBase64: String? // embedded image in Base64 format
 )

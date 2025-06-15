@@ -41,6 +41,14 @@ class SongsViewModel @Inject constructor(
         }
     }
 
+    fun scanSongs(){
+        viewModelScope.launch {
+            _isLoading.value = true
+            _songs.value = repository.scanSongs()
+            _isLoading.value = false
+        }
+    }
+
     fun createPlaylist(name: String) {
         viewModelScope.launch {
             repository.createPlaylist(name)

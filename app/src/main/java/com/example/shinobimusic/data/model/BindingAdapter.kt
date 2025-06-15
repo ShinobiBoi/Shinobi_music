@@ -1,10 +1,16 @@
 package com.example.shinobimusic.data.model
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
+import android.transition.Transition
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.example.shinobimusic.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +45,11 @@ fun ImageView.glideSong(song: Song){
     }
 
 }
+
+
+
+
+
 
 @BindingAdapter("glideplaylist")
 fun ImageView.glideplaylist(playlist: Playlist){

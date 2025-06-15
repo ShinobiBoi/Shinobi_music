@@ -48,6 +48,12 @@ android {
 
 dependencies {
 
+    // Media3 (ExoPlayer + MediaSession)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.session)
+    implementation(libs.media3.ui)
+    implementation(libs.kotlinx.coroutines.guava)
+
     //nav component
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

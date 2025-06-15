@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.shinobimusic.MainActivity
 import com.example.shinobimusic.R
 import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
@@ -29,9 +30,12 @@ class PlayListFragment : Fragment() {
     private val args: PlayListFragmentArgs by navArgs()
     private val viewModel: SongsViewModel by viewModels()
 
-    private lateinit var songAdapter: SongAdapter
-    private var currentPlaylists: List<Playlist> = emptyList()
+
     private lateinit var binding: FragmentPlayListBinding
+    private lateinit var songAdapter: SongAdapter
+    private lateinit var currentPlaylist: Playlist
+    private var allPlaylists: List<Playlist> = emptyList()
+    private var currentSongs: List<Song> = emptyList()
 
 
     override fun onCreateView(
@@ -40,7 +44,11 @@ class PlayListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentPlayListBinding.inflate(inflater, container, false)
-        binding.playlist=args.playlist
+
+
+        currentPlaylist=args.playlist
+        binding.playlist=currentPlaylist
+
 
         setupRecyclerView()
         checkPermission()
@@ -49,7 +57,20 @@ class PlayListFragment : Fragment() {
 
         // Observe playlists
         viewModel.playlists.observe(viewLifecycleOwner) {
-            currentPlaylists = it
+            allPlaylists = it
+            currentPlaylist=it.first { it.id == currentPlaylist.id }
+            viewModel.loadSongsByPaths(currentPlaylist.songPaths)
+        }
+
+        binding.backBtnPlaylist.setOnClickListener{
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.playlistPlayBtn.setOnClickListener{
+            (activity as MainActivity).songplay(currentSongs,currentSongs.first())
+        }
+        binding.playlistShuffleBtn.setOnClickListener{
+            (activity as MainActivity).songplay(currentSongs.shuffled(),currentSongs.first())
         }
 
 
@@ -60,7 +81,7 @@ class PlayListFragment : Fragment() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                viewModel.loadSongsByPaths(args.playlist.songPaths)
+                viewModel.loadSongsByPaths(currentPlaylist.songPaths)
             } else {
                 Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
             }
@@ -68,7 +89,10 @@ class PlayListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         songAdapter = SongAdapter(
-            onClick =  { song -> }
+            onClick =  { song ->
+                (activity as MainActivity).songplay(currentSongs,song)
+
+            }
             ,
             onAddToPlaylist = { song ->
                 showAddToPlaylistDialog(song)
@@ -86,7 +110,7 @@ class PlayListFragment : Fragment() {
 
         when {
             ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
-                viewModel.loadSongsByPaths(args.playlist.songPaths)
+                viewModel.loadSongsByPaths(currentPlaylist.songPaths)
             }
             else -> {
                 requestPermissionLauncher.launch(permission)
@@ -98,6 +122,7 @@ class PlayListFragment : Fragment() {
     private fun observeSongs() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.songs.collect { songs ->
+                currentSongs=songs
                 songAdapter.submitList(songs)
             }
         }
@@ -105,13 +130,13 @@ class PlayListFragment : Fragment() {
 
 
     private fun showAddToPlaylistDialog(song: Song) {
-        if (currentPlaylists.isEmpty()) {
+        if (allPlaylists.isEmpty()) {
             return
         }
-        val playlistNames = currentPlaylists.map { it.name }.toTypedArray()
-        val checkedItems = BooleanArray(currentPlaylists.size) { index ->
+        val playlistNames = allPlaylists.map { it.name }.toTypedArray()
+        val checkedItems = BooleanArray(allPlaylists.size) { index ->
             // ✅ Pre-check if song path already exists in this playlist
-            currentPlaylists[index].songPaths.contains(song.data)
+            allPlaylists[index].songPaths.contains(song.data)
         }
 
         AlertDialog.Builder(requireContext())
@@ -122,10 +147,10 @@ class PlayListFragment : Fragment() {
             .setPositiveButton("Add") { _, _ ->
                 for (i in checkedItems.indices) {
                     if (checkedItems[i]) {
-                        viewModel.addSongToPlaylist(currentPlaylists[i].id, song.data)
-                    } else if (currentPlaylists[i].songPaths.contains(song.data)) {
+                        viewModel.addSongToPlaylist(allPlaylists[i].id, song.data)
+                    } else if (allPlaylists[i].songPaths.contains(song.data)) {
                         // Optional: remove from playlist if it was unchecked
-                        viewModel.removeSongFromPlaylist(currentPlaylists[i].id, song.data)
+                        viewModel.removeSongFromPlaylist(allPlaylists[i].id, song.data)
                     }
                 }
             }

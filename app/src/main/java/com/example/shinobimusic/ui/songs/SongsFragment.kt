@@ -3,39 +3,44 @@ package com.example.shinobimusic.ui.songs
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.shinobimusic.MainActivity
 import com.example.shinobimusic.R
 import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
 import com.example.shinobimusic.data.model.SongAdapter
+import com.example.shinobimusic.databinding.FragmentSongsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class SongsFragment : Fragment() {
 
     private val viewModel: SongsViewModel by viewModels()
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var binding:FragmentSongsBinding
+
+
 
     private lateinit var songAdapter: SongAdapter
     private var currentPlaylists: List<Playlist> = emptyList()
+    private var currentSongs: List<Song> = emptyList()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -46,22 +51,25 @@ class SongsFragment : Fragment() {
             }
         }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_songs, container, false)
+        binding=FragmentSongsBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById(R.id.songs_rv)
-        progressBar = view.findViewById(R.id.progress_bar)
         setupRecyclerView()
         checkPermission()
         observeSongs()
         observeLoading()
+        setUpButtons()
+        setUpSearchView()
 
         // Observe playlists
         viewModel.playlists.observe(viewLifecycleOwner) {
@@ -69,16 +77,63 @@ class SongsFragment : Fragment() {
         }
     }
 
+    private fun setUpButtons() {
+        binding.backBtnAllSongs.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+        binding.playBtn.setOnClickListener{
+            (activity as MainActivity).songplay(currentSongs,currentSongs.first())
+        }
+        binding.shuffleBtn.setOnClickListener{
+            (activity as MainActivity).songplay(currentSongs.shuffled(),currentSongs.first())
+        }
+
+        binding.scanBtnAllSongs.setOnClickListener{
+            viewModel.scanSongs()
+        }
+    }
+
+    private fun setUpSearchView() {
+
+        binding.searchViewSongs.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val filteredList = if (newText.isNullOrBlank()) {
+                    currentSongs
+                } else {
+                    currentSongs.filter {
+                        it.title.contains(newText, ignoreCase = true) ||
+                                it.artist.contains(newText, ignoreCase = true)
+                    }
+                }
+                songAdapter.submitList(filteredList)
+                return true
+            }
+        })
+
+        val searchText = binding.searchViewSongs.findViewById<android.widget.EditText>(
+            androidx.appcompat.R.id.search_src_text
+        )
+        searchText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black)) // or your desired color
+        searchText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.lightgrey))
+    }
+
     private fun setupRecyclerView() {
         songAdapter = SongAdapter(
-            onClick =  { song -> }
+            onClick = { currentSong ->
+                (activity as MainActivity).songplay(currentSongs,currentSong)
+            }
             ,
             onAddToPlaylist = { song ->
                 showAddToPlaylistDialog(song)
             }
         )
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = songAdapter
+        binding.songsRv.layoutManager = LinearLayoutManager(requireContext())
+        binding.songsRv.adapter = songAdapter
     }
 
     private fun checkPermission() {
@@ -100,8 +155,8 @@ class SongsFragment : Fragment() {
     private fun observeLoading() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.isLoading.collect { isLoading ->
-                progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-                recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                binding.songsRv.visibility = if (isLoading) View.GONE else View.VISIBLE
             }
         }
     }
@@ -109,7 +164,8 @@ class SongsFragment : Fragment() {
         private fun observeSongs() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.songs.collect { songs ->
-                songAdapter.submitList(songs)
+                currentSongs=songs
+                songAdapter.submitList(currentSongs)
             }
         }
     }
@@ -142,6 +198,7 @@ class SongsFragment : Fragment() {
             .setNegativeButton("Cancel", null)
             .show()
     }
+
 
 
 }

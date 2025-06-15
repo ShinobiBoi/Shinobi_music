@@ -7,6 +7,7 @@ import com.example.shinobimusic.data.model.Song
 interface SongRepository {
     suspend fun getSongs(): List<Song>
     suspend fun getSongsByPaths(songPaths: List<String>): List<Song>
+    suspend fun scanSongs():List<Song>
 
     suspend fun createPlaylist(name: String)
 

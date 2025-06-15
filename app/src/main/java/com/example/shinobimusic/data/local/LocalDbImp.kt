@@ -8,8 +8,6 @@ import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
 import com.example.shinobimusic.domain.local.LocalDb
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LocalDbImp@Inject constructor
@@ -33,10 +31,22 @@ class LocalDbImp@Inject constructor
         return songs
     }
 
+    override suspend fun scanSongs():List<Song> {
+
+        // Scan if cache is empty
+        val songs = scanSongsFromStorage()
+        if (songs.isNotEmpty()) {
+            songDao.insertScannedSongs(songs)
+        }
+        return songs
+
+    }
+
     override suspend fun getSongsByPaths(songPaths: List<String>): List<Song> {
-        val cachedSongs = songDao.getAllSongs()
+        val cachedSongs = songDao.getSongsByPaths(songPaths)
         if (cachedSongs.isNotEmpty()) {
-            return cachedSongs.filter { it.data in songPaths }
+            val songMap = cachedSongs.associateBy { it.data }
+            return songPaths.mapNotNull { songMap[it] }
         }
 
         // Scan if cache is empty
@@ -44,8 +54,8 @@ class LocalDbImp@Inject constructor
         if (songs.isNotEmpty()) {
             songDao.insertAll(songs)
         }
-
-        return songs.filter { it.data in songPaths }
+        val songMap = songs.associateBy { it.data }
+        return songPaths.mapNotNull { songMap[it] }
     }
 
     private fun scanSongsFromStorage(): List<Song> {

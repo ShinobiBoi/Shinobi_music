@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 
 class SongAdapter(
     private val onClick: (Song) -> Unit,
-    private val onAddToPlaylist: (Song) -> Unit
+    private val onAddToPlaylist: (Song) -> Unit,
 ) : ListAdapter<Song,SongAdapter.SongViewHolder>(SongDiffCallback()) {
 
 
@@ -38,6 +38,7 @@ class SongAdapter(
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = getItem(position)
         holder.bind(song)
+        holder.itemView.setOnClickListener { onClick(song) }
     }
 
 
@@ -62,12 +63,44 @@ class SongAdapter(
                 popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 popupWindow.elevation = 8f
 
-                // Optional: position below the button
-                popupWindow.showAsDropDown(binding.songOptionsBtn, -100, 0)
+                val anchor = it
+
+                // Get screen location of the anchor (button)
+                val location = IntArray(2)
+                anchor.getLocationOnScreen(location)
+                val anchorX = location[0]
+                val anchorY = location[1]
+
+                // Get height of screen
+                val displayMetrics = anchor.context.resources.displayMetrics
+                val screenHeight = displayMetrics.heightPixels
+
+                // Measure the popup height
+                popupView.measure(
+                    View.MeasureSpec.UNSPECIFIED,
+                    View.MeasureSpec.UNSPECIFIED
+                )
+                val popupHeight = popupView.measuredHeight
+
+                // Decide where to show: below or above the anchor
+                val showAbove = (anchorY + anchor.height + popupHeight) > screenHeight
+
+                if (showAbove) {
+                    // Show above the anchor
+                    popupWindow.showAtLocation(
+                        anchor,
+                        android.view.Gravity.NO_GRAVITY,
+                        anchorX,
+                        anchorY - popupHeight
+                    )
+                } else {
+                    // Show below (same as showAsDropDown)
+                    popupWindow.showAsDropDown(anchor, -100, 0)
+                }
 
                 // Handle menu item clicks
                 popupView.findViewById<TextView>(R.id.menu_play).setOnClickListener {
-                    // Handle play
+                    onClick(song)
                     popupWindow.dismiss()
                 }
 
@@ -82,7 +115,7 @@ class SongAdapter(
                     popupWindow.dismiss()
                 }
             }
-            itemView.setOnClickListener { onClick(song) }
+
         }
 
     }
