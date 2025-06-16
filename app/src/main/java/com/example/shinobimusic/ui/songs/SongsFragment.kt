@@ -42,14 +42,6 @@ class SongsFragment : Fragment() {
     private var currentPlaylists: List<Playlist> = emptyList()
     private var currentSongs: List<Song> = emptyList()
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                    viewModel.loadSongs()
-            } else {
-                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
 
 
 
@@ -58,6 +50,7 @@ class SongsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding=FragmentSongsBinding.inflate(inflater,container,false)
+        viewModel.loadSongs()
         return binding.root
     }
 
@@ -65,7 +58,6 @@ class SongsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        checkPermission()
         observeSongs()
         observeLoading()
         setUpButtons()
@@ -85,7 +77,7 @@ class SongsFragment : Fragment() {
             (activity as MainActivity).songplay(currentSongs,currentSongs.first())
         }
         binding.shuffleBtn.setOnClickListener{
-            (activity as MainActivity).songplay(currentSongs.shuffled(),currentSongs.first())
+            (activity as MainActivity).songplay(currentSongs.shuffled(),currentSongs[(currentSongs.indices).random()])
         }
 
         binding.scanBtnAllSongs.setOnClickListener{
@@ -136,21 +128,6 @@ class SongsFragment : Fragment() {
         binding.songsRv.adapter = songAdapter
     }
 
-    private fun checkPermission() {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            Manifest.permission.READ_MEDIA_AUDIO
-        else
-            Manifest.permission.READ_EXTERNAL_STORAGE
-
-        when {
-            ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
-                    viewModel.loadSongs()
-            }
-            else -> {
-                requestPermissionLauncher.launch(permission)
-            }
-        }
-    }
 
     private fun observeLoading() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

@@ -6,11 +6,7 @@ import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -24,7 +20,6 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-
 import com.example.shinobimusic.data.model.Song
 import com.example.shinobimusic.data.model.glideSong
 import com.example.shinobimusic.databinding.ActivityMainBinding
@@ -70,10 +65,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-    override fun onStart() {
-        super.onStart()
-        reconnectToMediaController()
-    }
 
        override fun onCreate(savedInstanceState: Bundle?) {
            super.onCreate(savedInstanceState)
@@ -84,10 +75,27 @@ class MainActivity : AppCompatActivity() {
            val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
            navController = navHostFragment.navController
 
+           navController.addOnDestinationChangedListener{ _, destination, _ ->
+               if (destination.id == R.id.songDetailFragment) {
+                   binding.bottomPlayerContainer.bottomPlayerContent.visibility = View.GONE
+               } else if (song!=null && destination.id != R.id.songDetailFragment) {
+                   binding.bottomPlayerContainer.bottomPlayerContent.visibility = View.VISIBLE
+               }
+
+
+           }
+
           iniztialcheck()
 
            binding.noPermisionBtn.setOnClickListener {
                checkPermission()
+           }
+           binding.bottomPlayerContainer.bottomPlayerNavigate.setOnClickListener {
+                 // Your logic to get the current song
+               song?.let {
+                   val action = NavigationgraphDirections.actionGlobalSongDetailFragment(it)
+                   navController.navigate(action)
+               }
            }
 
            observeSongs()
@@ -120,16 +128,8 @@ class MainActivity : AppCompatActivity() {
         loadLastPlayedSong()
         song?.let { updateSong(it) }
 
+
         binding.bottomPlayerContainer.playerBottomPlayPause.setOnClickListener {
-
-           if (mediaController == null || mediaController?.mediaItemCount == 0 || mediaController?.currentMediaItem == null){
-               Log.d("MainActivity3", "MediaController not initialized or empty")
-               songplay(currentSongs,song!!)
-           }
-
-
-
-
             mediaController?.let {
                 if (it.isPlaying) it.pause() else it.play()
             }
@@ -154,46 +154,78 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        if (mediaController?.isPlaying == true) {
+            binding.bottomPlayerContainer.playerBottomPlayPause.setImageResource(R.drawable.pause)
+        } else {
+            binding.bottomPlayerContainer.playerBottomPlayPause.setImageResource(R.drawable.playicon)
+        }
+
 
     }
 
-    private fun reconnectToMediaController() {
+    private fun initializeMediaController(songs: List<Song>, currentSong: Song) {
         lifecycleScope.launch {
             if (mediaController == null) {
                 val sessionToken = SessionToken(
                     this@MainActivity,
                     ComponentName(this@MainActivity, MusicPlaybackService::class.java)
                 )
-                mediaController =
-                    MediaController.Builder(this@MainActivity, sessionToken).buildAsync().await()
+                mediaController = MediaController.Builder(this@MainActivity, sessionToken)
+                    .buildAsync().await()
 
                 setMediaControllerListerns()
+            }
 
-                when ( mediaController?.repeatMode){
-                    Player.REPEAT_MODE_ALL->{
-                        binding.bottomPlayerContainer.playerBottomModeBtn.setImageResource(R.drawable.repeatall)
-                        repeatMode=RepeatMode.ALL
-                    }
-                    Player.REPEAT_MODE_ONE->{
-                        binding.bottomPlayerContainer.playerBottomModeBtn.setImageResource(R.drawable.repeatone)
-                        repeatMode=RepeatMode.ONE
-                    }
-                    Player.REPEAT_MODE_OFF->{
-                        binding.bottomPlayerContainer.playerBottomModeBtn.setImageResource(R.drawable.repeatoff)
-                        repeatMode=RepeatMode.OFF
-                    }
-                }
-                if (mediaController?.isPlaying == true) {
-                    // Media is currently playing
-                    binding.bottomPlayerContainer.playerBottomPlayPause.setImageResource(R.drawable.pause)
-                } else {
-                    // Media is paused or stopped
-                    binding.bottomPlayerContainer.playerBottomPlayPause.setImageResource(R.drawable.playicon)
+
+
+            // Only set media items if there's no current media item (i.e. fresh session)
+            //reopen from notification bar
+            if (mediaController?.currentMediaItem == null) {
+                val mediaItems = songs.map { song ->
+                    MediaItem.Builder()
+                        .setUri(song.data)
+                        .setMediaMetadata(
+                            MediaMetadata.Builder()
+                                .setTitle(song.title)
+                                .setArtist(song.artist)
+                                .setAlbumArtist(song.data)
+                                .build()
+                        )
+                        .build()
                 }
 
+                mediaController?.setMediaItems(
+                    mediaItems,
+                    songs.indexOf(currentSong),
+                    0L
+                )
+                mediaController?.prepare()
+            }
+
+            setRepeatModeUi(mediaController!!.repeatMode)
+            updateSong(currentSong)
+            setBottomPlayer()
+
+        }
+    }
+
+    private fun setRepeatModeUi(currentRepeatMode: Int) {
+        when (currentRepeatMode) {
+            Player.REPEAT_MODE_ALL -> {
+                binding.bottomPlayerContainer.playerBottomModeBtn.setImageResource(R.drawable.repeatall)
+                repeatMode=RepeatMode.ALL
+            }
+            Player.REPEAT_MODE_ONE -> {
+                binding.bottomPlayerContainer.playerBottomModeBtn.setImageResource(R.drawable.repeatone)
+                repeatMode=RepeatMode.ONE
+            }
+            Player.REPEAT_MODE_OFF-> {
+                binding.bottomPlayerContainer.playerBottomModeBtn.setImageResource(R.drawable.repeatoff)
+                repeatMode=RepeatMode.OFF
             }
         }
     }
+
 
     private fun checkPermission() {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -218,14 +250,35 @@ class MainActivity : AppCompatActivity() {
     private fun observeSongs() {
         lifecycleScope.launchWhenStarted {
             viewModel.songs.collect { songs ->
-                currentSongs=songs
+                currentSongs = songs
+                if (songs.isNotEmpty()) {
+                    loadLastPlayedSong()
+                    song?.let {
+                        if (mediaController==null){
+                            initializeMediaController(songs, it)
+                            binding.bottomPlayerContainer.bottomPlayerContent.visibility = View.VISIBLE
+                        }
+
+                    }
+                }
             }
         }
     }
 
-    fun songplay(songs:List<Song>,currentSong:Song){
+    fun songplay(songs: List<Song>, currentSong: Song) {
+        if (mediaController == null) return // Safety check, should already be initialized
 
-        val mediaItems = songs.map {song->
+
+        if (mediaController?.isPlaying == true
+            && mediaController?.currentMediaItem?.mediaMetadata?.albumArtist.toString().equals(currentSong.data)
+            && songs.equals(currentSongs)){
+            val action=NavigationgraphDirections.actionGlobalSongDetailFragment(currentSong)
+            navController.navigate(action)
+
+            return
+        }
+
+        val mediaItems = songs.map { song ->
             MediaItem.Builder()
                 .setUri(song.data)
                 .setMediaMetadata(
@@ -238,29 +291,14 @@ class MainActivity : AppCompatActivity() {
                 .build()
         }
 
-        lifecycleScope.launch {
-            if (mediaController == null) {
-                val sessionToken = SessionToken(
-                    this@MainActivity,
-                    ComponentName(this@MainActivity, MusicPlaybackService::class.java)
-                )
-                mediaController =
-                    MediaController.Builder(this@MainActivity, sessionToken).buildAsync()
-                        .await()
-            }
-
-            setMediaControllerListerns()
-
-            mediaController?.apply {
-                setMediaItems(
-                    mediaItems,
-                    songs.indexOf(currentSong),
-                    0L
-                ) // start from clicked song
-                prepare()
-                play()
-            }
+        mediaController?.apply {
+            setMediaItems(mediaItems, songs.indexOf(currentSong), 0L)
+            prepare()
+            play()
         }
+
+        updateSong(currentSong)
+        currentSongs=songs
     }
 
     private  fun setMediaControllerListerns() {
@@ -284,6 +322,11 @@ class MainActivity : AppCompatActivity() {
                     binding.bottomPlayerContainer.playerBottomPlayPause.setImageResource(R.drawable.playicon)
                 }
             }
+
+            override fun onRepeatModeChanged(currentMode: Int) {
+                super.onRepeatModeChanged(currentMode)
+                setRepeatModeUi(currentMode)
+            }
         })
 
     }
@@ -294,9 +337,9 @@ class MainActivity : AppCompatActivity() {
         binding.bottomPlayerContainer.playerBottomSongTitle.isSelected = true
         binding.bottomPlayerContainer.playerBottomImage.glideSong(song)
 
-        binding.bottomPlayerContainer.bottomPlayerContent.visibility=View.VISIBLE
 
         saveLastPlayedSong(song)
+        loadLastPlayedSong()
     }
 
     fun saveLastPlayedSong(song: Song) {

@@ -70,7 +70,7 @@ class PlayListFragment : Fragment() {
             (activity as MainActivity).songplay(currentSongs,currentSongs.first())
         }
         binding.playlistShuffleBtn.setOnClickListener{
-            (activity as MainActivity).songplay(currentSongs.shuffled(),currentSongs.first())
+            (activity as MainActivity).songplay(currentSongs.shuffled(),currentSongs[(currentSongs.indices).random()])
         }
 
 

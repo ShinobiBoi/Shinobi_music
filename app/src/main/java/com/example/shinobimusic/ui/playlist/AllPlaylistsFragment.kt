@@ -43,6 +43,10 @@ class AllPlaylistsFragment : Fragment() {
             setupRecyclerView()
         }
 
+        binding.backBtnAllplaylists.setOnClickListener{
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
         binding.addNewPlaylistBtn.setOnClickListener{
             showAddNewPlaylistDialog()
         }
