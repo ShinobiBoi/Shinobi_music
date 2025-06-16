@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,8 @@ class SongDetailFragment : Fragment() {
             mediaController?.let {
                 binding.songDetailSeekbar.progress = it.currentPosition.toInt()
                 binding.songDetailTimestamp.text = formatTime(it.currentPosition)
+                if (it.duration>0)
+                    binding.songDetailDuration.text= formatTime(it.duration)
                 handler.postDelayed(this, 100)
             }
         }
@@ -82,9 +85,6 @@ class SongDetailFragment : Fragment() {
             binding.songDetailArtist.text = it.artist
             binding.songDetailTitle.isSelected=true
             binding.songDetailImage.glideSong(it)
-        }
-        mediaController?.let {
-            binding.songDetailDuration.text= formatTime(it.duration)
         }
 
 
