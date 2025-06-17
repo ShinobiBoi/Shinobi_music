@@ -1,20 +1,11 @@
 package com.example.shinobimusic.ui.songs
 
-import android.Manifest
+
 import android.app.AlertDialog
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.PopupWindow
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -57,17 +48,61 @@ class SongsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
         observeSongs()
         observeLoading()
+        observePlaylists()
+        setupRecyclerView()
         setUpButtons()
         setUpSearchView()
 
+        binding.searchViewSongs.isIconified = false
+        binding.searchViewSongs.clearFocus()
+
+
+    }
+
+    private fun observeSongs() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.songs.collect { songs ->
+                currentSongs=songs
+                songAdapter.submitList(currentSongs)
+            }
+        }
+    }
+
+    private fun observeLoading() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.isLoading.collect { isLoading ->
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                binding.songsRv.visibility = if (isLoading) View.GONE else View.VISIBLE
+            }
+        }
+    }
+
+    private fun observePlaylists() {
         // Observe playlists
         viewModel.playlists.observe(viewLifecycleOwner) {
             currentPlaylists = it
+            currentPlaylists=currentPlaylists.filter {
+                it.name != "Favorites" && it.name != "Recently Played"
+            }
         }
     }
+
+    private fun setupRecyclerView() {
+        songAdapter = SongAdapter(
+            onClick = { currentSong ->
+                (activity as MainActivity).songplay(currentSongs,currentSong)
+            }
+            ,
+            onAddToPlaylist = { song ->
+                showAddToPlaylistDialog(song)
+            }
+        )
+        binding.songsRv.layoutManager = LinearLayoutManager(requireContext())
+        binding.songsRv.adapter = songAdapter
+    }
+
 
     private fun setUpButtons() {
         binding.backBtnAllSongs.setOnClickListener {
@@ -114,38 +149,11 @@ class SongsFragment : Fragment() {
         searchText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.lightgrey))
     }
 
-    private fun setupRecyclerView() {
-        songAdapter = SongAdapter(
-            onClick = { currentSong ->
-                (activity as MainActivity).songplay(currentSongs,currentSong)
-            }
-            ,
-            onAddToPlaylist = { song ->
-                showAddToPlaylistDialog(song)
-            }
-        )
-        binding.songsRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.songsRv.adapter = songAdapter
-    }
 
 
-    private fun observeLoading() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.isLoading.collect { isLoading ->
-                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-                binding.songsRv.visibility = if (isLoading) View.GONE else View.VISIBLE
-            }
-        }
-    }
 
-        private fun observeSongs() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.songs.collect { songs ->
-                currentSongs=songs
-                songAdapter.submitList(currentSongs)
-            }
-        }
-    }
+
+
 
     private fun showAddToPlaylistDialog(song: Song) {
         if (currentPlaylists.isEmpty()) {

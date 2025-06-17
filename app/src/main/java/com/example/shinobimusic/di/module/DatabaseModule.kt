@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.shinobimusic.data.local.AppDatabase
 import com.example.shinobimusic.data.local.PlayListDao
+import com.example.shinobimusic.data.local.PlaylistCallback
 import com.example.shinobimusic.data.local.SongDao
 import dagger.Module
 import dagger.Provides
@@ -18,12 +19,14 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+    fun provideDatabase(@ApplicationContext context: Context, callback: PlaylistCallback): AppDatabase {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
             "shinobi_music_db"
-        ).build()
+        )
+        .addCallback(callback)
+        .build()
     }
 
     @Provides

@@ -39,6 +39,9 @@ class AllPlaylistsFragment : Fragment() {
         // Observe playlists
         viewModel.playlists.observe(viewLifecycleOwner) {
             currentPlaylists = it
+            currentPlaylists=currentPlaylists.filter {
+                it.name != "Favorites" && it.name != "Recently Played"
+            }
             setupViews()
             setupRecyclerView()
         }
@@ -59,6 +62,7 @@ class AllPlaylistsFragment : Fragment() {
     }
 
     private fun setupViews(){
+        Log.d("playlists", currentPlaylists.size.toString())
         if (currentPlaylists.isEmpty()) {
             binding.noPlaylistContent.visibility = View.VISIBLE
             binding.allplaylistContent.visibility = View.GONE

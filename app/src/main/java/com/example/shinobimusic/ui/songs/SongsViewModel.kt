@@ -66,6 +66,11 @@ class SongsViewModel @Inject constructor(
             repository.removeSongFromPlaylist(playlistId, songPath)
         }
     }
+    fun addSongToRecently(songPath: String){
+        viewModelScope.launch {
+            repository.addSongToRecently(songPath)
+        }
+    }
 
     fun deletePlaylist(playlistId: Int) {
         viewModelScope.launch {

@@ -12,6 +12,7 @@ interface LocalDb {
     suspend fun createPlaylist(name: String)
     fun getAllPlaylists(): LiveData<List<Playlist>>
     suspend fun addSongToPlaylist(playlistId: Int, songPath: String)
+    suspend fun addSongToRecently(songPath: String)
     suspend fun removeSongFromPlaylist(playlistId: Int, songPath: String)
     suspend fun isSongInPlaylist(playlistId: Int, songPath: String): Boolean
     suspend fun deletePlaylist(playlistId: Int)

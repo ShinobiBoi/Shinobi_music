@@ -1,24 +1,14 @@
 package com.example.shinobimusic.ui.playlist
 
-import android.media.MediaMetadataRetriever
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
-import com.bumptech.glide.Glide
-import com.example.shinobimusic.R
 import com.example.shinobimusic.data.model.Playlist
-import com.example.shinobimusic.data.model.Song
 import com.example.shinobimusic.databinding.PlaylistItemBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class PlayListAdapter(
     private val onClick: (Playlist) -> Unit,

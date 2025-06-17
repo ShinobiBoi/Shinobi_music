@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,7 +43,8 @@ class MainActivity : AppCompatActivity() {
 
      val viewModel: SongsViewModel by viewModels()
     private lateinit var currentSongs:List<Song>
-    private  var song: Song?=null
+    private var currentSong:Song?=null
+
 
     private lateinit var binding: ActivityMainBinding
 
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity() {
            navController.addOnDestinationChangedListener{ _, destination, _ ->
                if (destination.id == R.id.songDetailFragment) {
                    binding.bottomPlayerContainer.bottomPlayerContent.visibility = View.GONE
-               } else if (song!=null && destination.id != R.id.songDetailFragment) {
+               } else if (currentSong!=null && destination.id != R.id.songDetailFragment) {
                    binding.bottomPlayerContainer.bottomPlayerContent.visibility = View.VISIBLE
                }
 
@@ -92,11 +94,13 @@ class MainActivity : AppCompatActivity() {
            }
            binding.bottomPlayerContainer.bottomPlayerNavigate.setOnClickListener {
                  // Your logic to get the current song
-               song?.let {
+               currentSong?.let {
                    val action = NavigationgraphDirections.actionGlobalSongDetailFragment(it)
                    navController.navigate(action)
                }
            }
+
+
 
            observeSongs()
            setBottomPlayer()
@@ -126,7 +130,7 @@ class MainActivity : AppCompatActivity() {
     private fun setBottomPlayer() {
 
         loadLastPlayedSong()
-        song?.let { updateSong(it) }
+        currentSong?.let { updateSong(it) }
 
 
         binding.bottomPlayerContainer.playerBottomPlayPause.setOnClickListener {
@@ -253,7 +257,7 @@ class MainActivity : AppCompatActivity() {
                 currentSongs = songs
                 if (songs.isNotEmpty()) {
                     loadLastPlayedSong()
-                    song?.let {
+                    currentSong?.let {
                         if (mediaController==null){
                             initializeMediaController(songs, it)
                             binding.bottomPlayerContainer.bottomPlayerContent.visibility = View.VISIBLE
@@ -265,16 +269,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun songplay(songs: List<Song>, currentSong: Song) {
-        if (mediaController == null) return // Safety check, should already be initialized
+    fun songplay(songs: List<Song>, newSong: Song) {
+        if (mediaController == null) {
+            Log.d("MainActivity3","null")
+            initializeMediaController(songs,newSong)
+        } // Safety check, should already be initialized
 
 
         if (mediaController?.isPlaying == true
-            && mediaController?.currentMediaItem?.mediaMetadata?.albumArtist.toString().equals(currentSong.data)
+            && mediaController?.currentMediaItem?.mediaMetadata?.albumArtist.toString().equals(newSong.data)
             && songs.equals(currentSongs)){
-            val action=NavigationgraphDirections.actionGlobalSongDetailFragment(currentSong)
+            val action=NavigationgraphDirections.actionGlobalSongDetailFragment(newSong)
             navController.navigate(action)
-
+            Log.d("MainActivity3","already playing")
             return
         }
 
@@ -290,14 +297,19 @@ class MainActivity : AppCompatActivity() {
                 )
                 .build()
         }
+        Log.d("MainActivity3","media item")
 
         mediaController?.apply {
-            setMediaItems(mediaItems, songs.indexOf(currentSong), 0L)
+
+            setMediaItems(mediaItems, songs.indexOf(newSong), 0L)
             prepare()
             play()
+            Log.d("MainActivity3","apply")
         }
 
-        updateSong(currentSong)
+
+        viewModel.addSongToRecently(newSong.data)
+        updateSong(newSong)
         currentSongs=songs
     }
 
@@ -358,17 +370,17 @@ class MainActivity : AppCompatActivity() {
         val jsonStr = prefs.getString(LAST_SONG_KEY, null)
         if (jsonStr == null) {
             binding.bottomPlayerContainer.bottomPlayerContent.visibility=View.GONE
-            song= null
+            currentSong= null
             return
         }
         val json = JSONObject(jsonStr)
         if(json.getString("title").isEmpty()){
             binding.bottomPlayerContainer.bottomPlayerContent.visibility=View.GONE
-            song= null
+            currentSong= null
             return
         }
 
-        song=Song(
+        currentSong=Song(
             title = json.getString("title"),
             artist = json.getString("artist"),
             data = json.getString("data")

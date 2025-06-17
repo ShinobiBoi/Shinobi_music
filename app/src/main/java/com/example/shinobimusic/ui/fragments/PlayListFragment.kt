@@ -51,7 +51,6 @@ class PlayListFragment : Fragment() {
 
 
         setupRecyclerView()
-        checkPermission()
         observeSongs()
 
 
@@ -78,14 +77,7 @@ class PlayListFragment : Fragment() {
         return binding.root
     }
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                viewModel.loadSongsByPaths(currentPlaylist.songPaths)
-            } else {
-                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
+
 
     private fun setupRecyclerView() {
         songAdapter = SongAdapter(
@@ -102,21 +94,6 @@ class PlayListFragment : Fragment() {
         binding.playlistSongsRv.adapter = songAdapter
     }
 
-    private fun checkPermission() {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            Manifest.permission.READ_MEDIA_AUDIO
-        else
-            Manifest.permission.READ_EXTERNAL_STORAGE
-
-        when {
-            ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
-                viewModel.loadSongsByPaths(currentPlaylist.songPaths)
-            }
-            else -> {
-                requestPermissionLauncher.launch(permission)
-            }
-        }
-    }
 
 
     private fun observeSongs() {

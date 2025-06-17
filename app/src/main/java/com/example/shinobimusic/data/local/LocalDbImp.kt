@@ -119,6 +119,23 @@ class LocalDbImp@Inject constructor
         }
     }
 
+override suspend fun addSongToRecently(songPath: String) {
+    val playlist = playListDao.getPlaylistById(2) // Assuming ID 1 is for "Recently Played"
+
+    // Remove song if it already exists to avoid duplicates
+    val cleanedList = playlist.songPaths.filter { it != songPath }
+
+    // Add the song at the top
+    val updatedSongs = listOf(songPath) + cleanedList
+
+    // Optional: Limit to last 50 songs
+    val limitedSongs = updatedSongs.take(50)
+
+    val updatedPlaylist = playlist.copy(songPaths = limitedSongs)
+    playListDao.updatePlaylist(updatedPlaylist)
+    }
+
+
     override suspend fun removeSongFromPlaylist(playlistId: Int, songPath: String)  {
         val playlist = playListDao.getPlaylistById(playlistId)
         val updatedSongs = playlist.songPaths - songPath
