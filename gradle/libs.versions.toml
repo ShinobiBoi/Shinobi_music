@@ -24,7 +24,8 @@ hilt = "2.51"  # Check for the latest version
 hiltCompiler = "1.2.0"  # For Jetpack Compose integration
 
 coroutines = "1.7.3"  # Latest stable version
-lifecycle = "2.7.0"   # For ViewModel and LiveData
+lifecycle = "2.7.0"
+paletteKtx = "1.0.0"   # For ViewModel and LiveData
 
 
 [libraries]
@@ -68,6 +69,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 # ViewModel & Lifecycle (AndroidX)
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

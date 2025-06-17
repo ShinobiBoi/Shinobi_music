@@ -6,6 +6,7 @@
     tools:context=".ui.fragments.NewPlaylistFragment">
 
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/song_detail_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">

@@ -1,6 +1,8 @@
 package com.example.shinobimusic.ui.songdetail
 
 import android.content.ComponentName
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,12 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import androidx.navigation.fragment.findNavController
+import androidx.palette.graphics.Palette
 import com.example.shinobimusic.R
 import com.example.shinobimusic.data.model.Song
 import com.example.shinobimusic.data.model.glideSong
@@ -36,8 +40,8 @@ class SongDetailFragment : Fragment() {
             mediaController?.let {
                 binding.songDetailSeekbar.progress = it.currentPosition.toInt()
                 binding.songDetailTimestamp.text = formatTime(it.currentPosition)
-                if (it.duration>0)
-                    binding.songDetailDuration.text= formatTime(it.duration)
+                if (it.duration > 0)
+                    binding.songDetailDuration.text = formatTime(it.duration)
                 handler.postDelayed(this, 100)
             }
         }
@@ -76,20 +80,49 @@ class SongDetailFragment : Fragment() {
             Song(
                 title = it.title?.toString() ?: "Unknown",
                 artist = it.artist?.toString() ?: "Unknown",
-                data = it.albumArtist?.toString()?: "Unknown"
+                data = it.albumArtist?.toString() ?: "Unknown"
             )
         }
 
         song?.let {
             binding.songDetailTitle.text = it.title
             binding.songDetailArtist.text = it.artist
-            binding.songDetailTitle.isSelected=true
+            binding.songDetailTitle.isSelected = true
             binding.songDetailImage.glideSong(it)
+            setBackgroundDominantColor(it.data)
         }
-
 
         updatePlayPauseIcon()
         updateRepeatModeIcon()
+    }
+
+    private fun setBackgroundDominantColor(songPath: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val retriever = MediaMetadataRetriever()
+            try {
+                retriever.setDataSource(songPath)
+                val art = retriever.embeddedPicture
+                if (art != null) {
+                    val bitmap = BitmapFactory.decodeByteArray(art, 0, art.size)
+
+                    withContext(Dispatchers.Main) {
+                        Palette.from(bitmap).generate { palette ->
+                            val dominantColor = palette?.getDominantColor(
+                                ContextCompat.getColor(requireContext(), R.color.black)
+                            )
+
+                            dominantColor?.let { color ->
+                                binding.songDetailContent.setBackgroundColor(color)
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("ColorExtract", "Error getting dominant color: ${e.message}")
+            } finally {
+                retriever.release()
+            }
+        }
     }
 
     private fun setupListeners() {
@@ -157,6 +190,7 @@ class SongDetailFragment : Fragment() {
             setupUIFromMediaItem(mediaItem)
         }
     }
+
     private fun formatTime(milliseconds: Long): String {
         val totalSeconds = milliseconds / 1000
         val minutes = totalSeconds / 60
