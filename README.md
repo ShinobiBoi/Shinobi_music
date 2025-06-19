@@ -57,8 +57,7 @@ Built with love (and code):
 
 * 🎙️ Equalizer & audio effects
 * ☁️ Cloud streaming (maybe!)
-* 🖼️ Album art fetching
-* 🕶️ Dark mode
+
 
 ---
 
