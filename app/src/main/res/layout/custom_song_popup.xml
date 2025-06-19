@@ -59,11 +59,11 @@
         android:drawablePadding="8dp" />
 
     <TextView
-        android:id="@+id/menu_delete"
+        android:id="@+id/menu_remove"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/popup_background"
-        android:text="Delete"
+        android:text="Remove"
         android:textColor="@color/red"
         android:padding="10dp"
         android:drawableEnd="@drawable/remove"

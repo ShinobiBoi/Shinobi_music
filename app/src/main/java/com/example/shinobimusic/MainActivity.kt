@@ -22,9 +22,9 @@ import androidx.media3.session.SessionToken
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.shinobimusic.data.model.Song
-import com.example.shinobimusic.data.model.glideSong
+import com.example.shinobimusic.utilits.glideSong
 import com.example.shinobimusic.databinding.ActivityMainBinding
-import com.example.shinobimusic.ui.MusicPlaybackService
+import com.example.shinobimusic.service.MusicPlaybackService
 import com.example.shinobimusic.ui.songs.SongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.guava.await

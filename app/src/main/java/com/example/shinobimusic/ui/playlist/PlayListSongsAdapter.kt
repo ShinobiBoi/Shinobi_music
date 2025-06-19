@@ -1,39 +1,35 @@
-package com.example.shinobimusic.data.model
+package com.example.shinobimusic.ui.playlist
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.shinobimusic.R
+import com.example.shinobimusic.data.model.Song
+import com.example.shinobimusic.utilits.SongDiffCallback
 import com.example.shinobimusic.databinding.SongItemBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class SongAdapter(
+class PlayListSongsAdapter (
     private val onClick: (Song) -> Unit,
     private val onAddToPlaylist: (Song) -> Unit,
-) : ListAdapter<Song,SongAdapter.SongViewHolder>(SongDiffCallback()) {
+    private val onRemove: (Song) -> Unit,
+) : ListAdapter<Song, PlayListSongsAdapter.SongViewHolder>(SongDiffCallback()) {
 
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListSongsAdapter.SongViewHolder {
 
         val binding = SongItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SongViewHolder(binding)
     }
+
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = getItem(position)
@@ -110,26 +106,14 @@ class SongAdapter(
                     popupWindow.dismiss()
                 }
 
-                popupView.findViewById<TextView>(R.id.menu_delete).setOnClickListener {
-                    // Handle delete
+                popupView.findViewById<TextView>(R.id.menu_remove).setOnClickListener {
+                    onRemove(song)
                     popupWindow.dismiss()
                 }
             }
 
         }
 
-    }
-
-}
-
-
-class SongDiffCallback : DiffUtil.ItemCallback<Song>() {
-    override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
-        return oldItem.data == newItem.data
-    }
-
-    override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
-        return oldItem == newItem
     }
 
 }

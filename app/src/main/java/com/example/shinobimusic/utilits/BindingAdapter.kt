@@ -1,17 +1,12 @@
-package com.example.shinobimusic.data.model
+package com.example.shinobimusic.utilits
 
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
-import android.transition.Transition
-import android.view.View
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
 import com.example.shinobimusic.R
+import com.example.shinobimusic.data.model.Playlist
+import com.example.shinobimusic.data.model.Song
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shinobimusic.MainActivity
 import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
-import com.example.shinobimusic.data.model.SongAdapter
 import com.example.shinobimusic.databinding.FragmentPlayListBinding
-import com.example.shinobimusic.ui.songs.SongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +24,7 @@ class PlayListFragment : Fragment() {
 
 
     private lateinit var binding: FragmentPlayListBinding
-    private lateinit var songAdapter: SongAdapter
+    private lateinit var songAdapter: PlayListSongsAdapter
     private lateinit var currentPlaylist: Playlist
     private var allPlaylists: List<Playlist> = emptyList()
     private var currentSongs: List<Song> = emptyList()
@@ -74,7 +72,7 @@ class PlayListFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        songAdapter = SongAdapter(
+        songAdapter = PlayListSongsAdapter(
             onClick =  { song ->
                 (activity as MainActivity).songplay(currentSongs,song)
 
@@ -82,6 +80,9 @@ class PlayListFragment : Fragment() {
             ,
             onAddToPlaylist = { song ->
                 showAddToPlaylistDialog(song)
+            },
+            onRemove = { song ->
+                viewModel.removeSongFromPlaylist(currentPlaylist.id, song.data)
             }
         )
         binding.playlistSongsRv.layoutManager = LinearLayoutManager(requireContext())

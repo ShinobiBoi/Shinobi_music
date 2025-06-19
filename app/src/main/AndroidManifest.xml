@@ -19,7 +19,7 @@
         android:theme="@style/Theme.ShinobiMusic"
         tools:targetApi="31">
         <service
-            android:name=".ui.MusicPlaybackService"
+            android:name=".service.MusicPlaybackService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback"
             tools:ignore="ForegroundServicePermission">

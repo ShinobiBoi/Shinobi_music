@@ -1,9 +1,8 @@
-package com.example.shinobimusic.ui
+package com.example.shinobimusic.service
 
 import android.app.PendingIntent
 import android.content.Intent
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.MediaController
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.example.shinobimusic.MainActivity

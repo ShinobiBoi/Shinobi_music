@@ -20,9 +20,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.palette.graphics.Palette
 import com.example.shinobimusic.R
 import com.example.shinobimusic.data.model.Song
-import com.example.shinobimusic.data.model.glideSong
+import com.example.shinobimusic.utilits.glideSong
 import com.example.shinobimusic.databinding.FragmentSongDetailBinding
-import com.example.shinobimusic.ui.MusicPlaybackService
+import com.example.shinobimusic.service.MusicPlaybackService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.guava.await

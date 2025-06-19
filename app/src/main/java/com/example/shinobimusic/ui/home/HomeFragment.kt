@@ -6,19 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shinobimusic.MainActivity
-import com.example.shinobimusic.R
-import com.example.shinobimusic.data.model.OptionItem
 import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
-import com.example.shinobimusic.data.model.SongAdapter
+import com.example.shinobimusic.utilits.SongAdapter
 import com.example.shinobimusic.databinding.FragmentHomeBinding
-import com.example.shinobimusic.ui.songs.SongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 

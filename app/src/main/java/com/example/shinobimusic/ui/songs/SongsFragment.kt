@@ -16,7 +16,7 @@ import com.example.shinobimusic.MainActivity
 import com.example.shinobimusic.R
 import com.example.shinobimusic.data.model.Playlist
 import com.example.shinobimusic.data.model.Song
-import com.example.shinobimusic.data.model.SongAdapter
+import com.example.shinobimusic.utilits.SongAdapter
 import com.example.shinobimusic.databinding.FragmentSongsBinding
 import dagger.hilt.android.AndroidEntryPoint
 
