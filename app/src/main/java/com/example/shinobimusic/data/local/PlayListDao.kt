@@ -22,6 +22,9 @@ interface PlayListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylist(playlist: Playlist)
 
+    @Query("SELECT * FROM playlists WHERE name = :name LIMIT 1")
+    suspend fun getPlaylistByName(name: String): Playlist?
+
     @Update
     suspend fun updatePlaylist(playlist: Playlist)
 

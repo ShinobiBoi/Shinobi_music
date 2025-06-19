@@ -51,7 +51,7 @@ class SongsViewModel @Inject constructor(
 
     fun createPlaylist(name: String) {
         viewModelScope.launch {
-            repository.createPlaylist(name)
+            repository.createPlaylist(Playlist(name = name, songPaths = emptyList()))
         }
     }
 
@@ -69,6 +69,29 @@ class SongsViewModel @Inject constructor(
     fun addSongToRecently(songPath: String){
         viewModelScope.launch {
             repository.addSongToRecently(songPath)
+        }
+    }
+
+    fun createArtistPlaylists() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val allSongs = repository.getSongs()
+
+            // Group songs by artist
+            val artistToSongsMap = allSongs.groupBy { it.artist.lowercase() }
+
+            for ((artist, songs) in artistToSongsMap) {
+                val name = "$artist Artist"
+                val songPaths = songs.map { it.data }
+
+                val existing = repository.getPlaylistByName(name)
+                if (existing != null) {
+                    // Update existing
+                    repository.updatePlaylist(existing.copy(songPaths = songPaths))
+                } else {
+                    // Insert new
+                    repository.createPlaylist(Playlist(name = name, songPaths = songPaths))
+                }
+            }
         }
     }
 

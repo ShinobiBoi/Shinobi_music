@@ -27,7 +27,7 @@ import kotlinx.coroutines.delay
 class HomeFragment : Fragment() {
 
 
-    val viewModel: SongsViewModel by viewModels()
+    val viewModel: HomeViewModel by viewModels()
     private var currentPlaylists: List<Playlist> = emptyList()
     private var currentSongs: List<Song> = emptyList()
     private lateinit var songAdapter: SongAdapter
@@ -45,6 +45,12 @@ class HomeFragment : Fragment() {
 
         binding.playlistOption.setOnClickListener(){
             val action = HomeFragmentDirections.actionHomeFragmentToAllPlaylistsFragment()
+            findNavController().navigate(action)
+
+        }
+
+        binding.artistOption.setOnClickListener(){
+            val action = HomeFragmentDirections.actionHomeFragmentToArtistFragment()
             findNavController().navigate(action)
 
         }
@@ -104,7 +110,7 @@ class HomeFragment : Fragment() {
     private fun showAddToPlaylistDialog(song: Song) {
 
         val allPlaylists =currentPlaylists.filter {
-            it.name != "Favorites" && it.name != "Recently Played"
+            it.name != "Favorites" && it.name != "Recently Played" && !it.name.contains("Artist")
         }
         if (allPlaylists.isEmpty()) {
             return

@@ -24,12 +24,16 @@ class SongRepositoryImp @Inject constructor(
         return localDb.scanSongs()
     }
 
-    override suspend fun createPlaylist(name: String) {
-        localDb.createPlaylist(name)
+    override suspend fun createPlaylist(playlist: Playlist) {
+        localDb.createPlaylist(playlist)
     }
 
     override fun getAllPlaylists(): LiveData<List<Playlist>> {
         return localDb.getAllPlaylists()
+    }
+
+    override suspend fun getPlaylistByName(name: String): Playlist? {
+        return localDb.getPlaylistByName(name)
     }
 
     override suspend fun addSongToPlaylist(playlistId: Int, songPath: String) {
@@ -38,6 +42,10 @@ class SongRepositoryImp @Inject constructor(
 
     override suspend fun addSongToRecently(songPath: String) {
         localDb.addSongToRecently(songPath)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        localDb.updatePlaylist(playlist)
     }
 
     override suspend fun removeSongFromPlaylist(playlistId: Int, songPath: String) {

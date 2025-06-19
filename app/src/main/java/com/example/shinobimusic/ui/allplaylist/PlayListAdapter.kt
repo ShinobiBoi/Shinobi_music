@@ -1,4 +1,4 @@
-package com.example.shinobimusic.ui.playlist
+package com.example.shinobimusic.ui.allplaylist
 
 
 import android.view.LayoutInflater

@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shinobimusic.MainActivity
 import com.example.shinobimusic.R
@@ -84,7 +85,7 @@ class SongsFragment : Fragment() {
         viewModel.playlists.observe(viewLifecycleOwner) {
             currentPlaylists = it
             currentPlaylists=currentPlaylists.filter {
-                it.name != "Favorites" && it.name != "Recently Played"
+                it.name != "Favorites" && it.name != "Recently Played" && !it.name.contains("Artist")
             }
         }
     }
@@ -106,7 +107,7 @@ class SongsFragment : Fragment() {
 
     private fun setUpButtons() {
         binding.backBtnAllSongs.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().popBackStack()
         }
         binding.playBtn.setOnClickListener{
             (activity as MainActivity).songplay(currentSongs,currentSongs.first())

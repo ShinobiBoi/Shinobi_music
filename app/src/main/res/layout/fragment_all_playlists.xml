@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".ui.playlist.AllPlaylistsFragment">
+    tools:context=".ui.allplaylist.AllPlaylistsFragment">
 
     <Button
         android:id="@+id/back_btn_allplaylists"

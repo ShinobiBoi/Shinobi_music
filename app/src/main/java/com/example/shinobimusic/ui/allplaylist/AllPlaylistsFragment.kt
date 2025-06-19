@@ -1,4 +1,4 @@
-package com.example.shinobimusic.ui.playlist
+package com.example.shinobimusic.ui.allplaylist
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -14,16 +14,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shinobimusic.data.model.Playlist
-import com.example.shinobimusic.data.model.Song
-import com.example.shinobimusic.data.model.SongAdapter
 import com.example.shinobimusic.databinding.FragmentAllPlaylistsBinding
-import com.example.shinobimusic.ui.songs.SongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AllPlaylistsFragment : Fragment() {
 
-    private val viewModel: SongsViewModel by viewModels()
+    private val viewModel: AllPlaylistsViewModel by viewModels()
     private var currentPlaylists: List<Playlist> = emptyList()
     private lateinit var playListAdapter: PlayListAdapter
     private lateinit var binding: FragmentAllPlaylistsBinding
@@ -40,14 +37,14 @@ class AllPlaylistsFragment : Fragment() {
         viewModel.playlists.observe(viewLifecycleOwner) {
             currentPlaylists = it
             currentPlaylists=currentPlaylists.filter {
-                it.name != "Favorites" && it.name != "Recently Played"
+                it.name != "Favorites" && it.name != "Recently Played" && !it.name.contains("Artist")
             }
             setupViews()
             setupRecyclerView()
         }
 
         binding.backBtnAllplaylists.setOnClickListener{
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().popBackStack()
         }
 
         binding.addNewPlaylistBtn.setOnClickListener{

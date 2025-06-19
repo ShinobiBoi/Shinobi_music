@@ -127,7 +127,7 @@ class SongDetailFragment : Fragment() {
 
     private fun setupListeners() {
         binding.songDetailDownbtn.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         binding.songDetailPlaypausebtn.setOnClickListener {

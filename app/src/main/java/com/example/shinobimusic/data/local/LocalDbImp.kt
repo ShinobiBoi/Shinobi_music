@@ -101,9 +101,13 @@ class LocalDbImp@Inject constructor
 
 
 
-    override suspend fun createPlaylist(name: String) {
-        val playlist = Playlist(name = name, songPaths = listOf())
+    override suspend fun createPlaylist(playlist: Playlist) {
         playListDao.insertPlaylist(playlist)
+    }
+
+
+    override suspend fun getPlaylistByName(name: String): Playlist? {
+        return playListDao.getPlaylistByName(name)
     }
 
     override  fun getAllPlaylists(): LiveData<List<Playlist>> {
@@ -133,6 +137,10 @@ override suspend fun addSongToRecently(songPath: String) {
 
     val updatedPlaylist = playlist.copy(songPaths = limitedSongs)
     playListDao.updatePlaylist(updatedPlaylist)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        playListDao.updatePlaylist(playlist)
     }
 
 

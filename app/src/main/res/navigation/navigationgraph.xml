@@ -30,9 +30,13 @@
         tools:layout="@layout/fragment_option_menu" />
     <fragment
         android:id="@+id/artistFragment"
-        android:name="com.example.shinobimusic.ui.fragments.ArtistFragment"
+        android:name="com.example.shinobimusic.ui.artist.ArtistFragment"
         android:label="fragment_artist"
-        tools:layout="@layout/fragment_artist" />
+        tools:layout="@layout/fragment_artist" >
+        <action
+            android:id="@+id/action_artistFragment_to_playListFragment2"
+            app:destination="@id/playListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/songsFragment"
         android:name="com.example.shinobimusic.ui.songs.SongsFragment"
@@ -41,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/allPlaylistsFragment"
-        android:name="com.example.shinobimusic.ui.playlist.AllPlaylistsFragment"
+        android:name="com.example.shinobimusic.ui.allplaylist.AllPlaylistsFragment"
         android:label="fragment_all_playlists"
         tools:layout="@layout/fragment_all_playlists" >
         <action
@@ -50,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/playListFragment"
-        android:name="com.example.shinobimusic.ui.fragments.PlayListFragment"
+        android:name="com.example.shinobimusic.ui.playlist.PlayListFragment"
         android:label="PlayListFragment"
         tools:layout="@layout/fragment_play_list">
         <argument
